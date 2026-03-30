@@ -1,75 +1,87 @@
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function SeekerDashboard() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  function handleLogout() {
-    logout();
-    navigate("/login");
-  }
+  const { user } = useAuth();
 
   return (
     <div style={styles.page}>
-      <nav style={styles.nav}>
-        <span style={styles.logo}>RoomieMatch</span>
-        <div style={styles.navRight}>
-          <span style={styles.navName}>{user?.name}</span>
-          <button onClick={handleLogout} style={styles.logoutBtn}>Log out</button>
-        </div>
-      </nav>
-
+      <Navbar />
       <main style={styles.main}>
         <div style={styles.welcome}>
-          <h2 style={styles.heading}>Welcome back, {user?.name?.split(" ")[0]}</h2>
-          <span style={styles.roleBadge}>Seeker</span>
-        </div>
-
-        <div style={styles.cardGrid}>
-          <div style={styles.statCard}>
-            <div style={styles.statNum}>0</div>
-            <div style={styles.statLabel}>Saved listings</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statNum}>0</div>
-            <div style={styles.statLabel}>Messages sent</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statNum}>0</div>
-            <div style={styles.statLabel}>Rooms viewed</div>
+          <div>
+            <h2 style={styles.heading}>Welcome back, {user?.name?.split(" ")[0]}</h2>
+            <p style={styles.subheading}>Find your perfect room and connect with listers</p>
           </div>
         </div>
-
-        <div style={styles.emptySection}>
-          <p style={styles.emptyText}>No listings to browse yet.</p>
-          <button style={styles.primaryBtn}>
-            Browse rooms
-          </button>
-          <p style={styles.comingSoon}>Search + listings coming in Week 2</p>
+        <div style={styles.statsGrid}>
+          <StatCard label="Saved listings" value={0} />
+          <StatCard label="Messages sent" value={0} />
+          <StatCard label="Rooms viewed" value={0} />
+        </div>
+        <div style={styles.section}>
+          <div style={styles.sectionHeader}>
+            <h3 style={styles.sectionTitle}>Browse rooms</h3>
+            <button style={styles.primaryBtn}>Search listings</button>
+          </div>
+          <div style={styles.emptyState}>
+            <p style={styles.emptyText}>No listings to browse yet.</p>
+            <p style={styles.comingSoon}>Search + listings coming in Week 2</p>
+          </div>
+        </div>
+        <div style={styles.infoCard}>
+          <div style={styles.infoRow}>
+            <span style={styles.infoLabel}>Email</span>
+            <span style={styles.infoValue}>{user?.email}</span>
+          </div>
+          <div style={styles.infoRow}>
+            <span style={styles.infoLabel}>Role</span>
+            <span style={styles.infoValue}>{user?.role}</span>
+          </div>
+          <div style={styles.infoRow}>
+            <span style={styles.infoLabel}>Verified</span>
+            <span style={styles.infoValue}>{user?.is_verified ? "Yes" : "Not yet"}</span>
+          </div>
+          <div style={{ ...styles.infoRow, borderBottom: "none" }}>
+            <span style={styles.infoLabel}>Member since</span>
+            <span style={styles.infoValue}>
+              {user?.created_at ? new Date(user.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "—"}
+            </span>
+          </div>
         </div>
       </main>
     </div>
   );
 }
 
+function StatCard({ label, value }) {
+  return (
+    <div style={styles.statCard}>
+      <div style={styles.statNum}>{value}</div>
+      <div style={styles.statLabel}>{label}</div>
+    </div>
+  );
+}
+
 const styles = {
-  page: { minHeight:"100dvh", background:"var(--bg)" },
-  nav: { background:"var(--surface)", borderBottom:"1px solid var(--border)", padding:"0 1.5rem", height:"56px", display:"flex", alignItems:"center", justifyContent:"space-between" },
-  logo: { fontFamily:"var(--font-display)", fontSize:"1.2rem" },
-  navRight: { display:"flex", alignItems:"center", gap:"1rem" },
-  navName: { fontSize:"13px", color:"var(--text-secondary)" },
-  logoutBtn: { fontSize:"13px", padding:"6px 14px", borderRadius:"8px", border:"1px solid var(--border)", background:"transparent", cursor:"pointer", color:"var(--text-secondary)" },
-  main: { maxWidth:"680px", margin:"0 auto", padding:"2rem 1.25rem" },
-  welcome: { display:"flex", alignItems:"center", gap:"12px", marginBottom:"1.5rem" },
-  heading: { fontSize:"1.4rem", fontWeight:500 },
-  roleBadge: { fontSize:"11px", fontWeight:500, padding:"3px 10px", borderRadius:"20px", background:"#E6F1FB", color:"#0C447C" },
-  cardGrid: { display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:"12px", marginBottom:"2rem" },
-  statCard: { background:"var(--surface)", border:"1px solid var(--border)", borderRadius:"var(--radius)", padding:"1rem", textAlign:"center" },
-  statNum: { fontSize:"1.8rem", fontWeight:500, marginBottom:"4px" },
-  statLabel: { fontSize:"12px", color:"var(--text-secondary)" },
-  emptySection: { background:"var(--surface)", border:"1px solid var(--border)", borderRadius:"var(--radius)", padding:"2rem", textAlign:"center" },
-  emptyText: { color:"var(--text-secondary)", fontSize:"14px", marginBottom:"1rem" },
-  primaryBtn: { padding:"10px 24px", borderRadius:"8px", border:"none", background:"var(--accent)", color:"#fff", fontSize:"14px", fontWeight:500, cursor:"pointer" },
-  comingSoon: { marginTop:"12px", fontSize:"12px", color:"var(--text-muted)" },
+  page: { minHeight: "100dvh", background: "var(--bg)" },
+  main: { maxWidth: "720px", margin: "0 auto", padding: "2rem 1.25rem", display: "flex", flexDirection: "column", gap: "1.5rem" },
+  welcome: { display: "flex", alignItems: "flex-start", justifyContent: "space-between" },
+  heading: { fontSize: "1.5rem", fontWeight: 500, marginBottom: "4px" },
+  subheading: { fontSize: "13px", color: "var(--text-secondary)" },
+  statsGrid: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" },
+  statCard: { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "1.25rem", textAlign: "center" },
+  statNum: { fontSize: "2rem", fontWeight: 500, color: "var(--text-primary)", marginBottom: "4px" },
+  statLabel: { fontSize: "12px", color: "var(--text-secondary)" },
+  section: { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "1.25rem" },
+  sectionHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" },
+  sectionTitle: { fontSize: "15px", fontWeight: 500 },
+  primaryBtn: { padding: "8px 18px", borderRadius: "8px", border: "none", background: "var(--accent)", color: "#fff", fontSize: "13px", fontWeight: 500, cursor: "pointer" },
+  emptyState: { textAlign: "center", padding: "2rem 0" },
+  emptyText: { fontSize: "14px", color: "var(--text-secondary)", marginBottom: "6px" },
+  comingSoon: { fontSize: "12px", color: "var(--text-muted)" },
+  infoCard: { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", overflow: "hidden" },
+  infoRow: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 1.25rem", borderBottom: "1px solid var(--border)" },
+  infoLabel: { fontSize: "13px", color: "var(--text-secondary)" },
+  infoValue: { fontSize: "13px", color: "var(--text-primary)", fontWeight: 500 },
 };

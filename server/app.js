@@ -12,7 +12,8 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
-app.use("/api/auth", require("./src/routes/auth"));
+app.use("/api/auth",  require("./src/routes/auth"));
+app.use("/api/users", require("./src/routes/users"));
 
 // 404
 app.use((req, res) => {
