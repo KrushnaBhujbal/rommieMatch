@@ -32,6 +32,29 @@ export function AuthProvider({ children }) {
       setLoading(false);
     }
   }, [token]);
+
+  // Add this after the useEffect block
+  useEffect(() => {
+    // Intercept every axios response
+    const interceptor = axios.interceptors.response.use(
+      (response) => response, // success — pass through
+      (error) => {
+        // If any request returns 401 — token expired or invalid
+        if (error.response?.status === 401) {
+          // Don't logout if we're already on the login/register page
+          const publicPaths = ["/login", "/register"];
+          if (!publicPaths.includes(window.location.pathname)) {
+            logout();
+            window.location.href = "/login";
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    // Cleanup — remove interceptor when component unmounts
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
  
   // Called after successful login or register
   function login(userData, jwt) {
