@@ -14,6 +14,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth",  require("./src/routes/auth"));
 app.use("/api/users", require("./src/routes/users"));
+app.use("/api/listings", require("./src/routes/listings"));
 
 // 404
 app.use((req, res) => {
