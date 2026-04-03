@@ -1,12 +1,41 @@
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
- 
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 export default function ListerDashboard() {
   const { user } = useAuth();
- 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const successMessage = location.state?.message;
+  const [listingCount, setListingCount] = useState(0);
+
+    useEffect(() => {
+      axios.get("/api/listings")
+        .then(res => {
+          const mine = res.data.listings.filter(l => l.lister_id === user?.id);
+          setListingCount(mine.length);
+        })
+        .catch(() => {});
+    }, [user]);
+
   return (
     <div style={styles.page}>
       <Navbar />
+        {successMessage && (
+        <div style={{
+          background: "#f0fdf4",
+          border: "1px solid #bbf7d0",
+          color: "#15803d",
+          padding: "12px 1.5rem",
+          fontSize: "13px",
+          textAlign: "center",
+        }}>
+          {successMessage}
+        </div>
+      )}
       <main style={styles.main}>
         <div style={styles.welcome}>
           <div>
@@ -15,14 +44,16 @@ export default function ListerDashboard() {
           </div>
         </div>
         <div style={styles.statsGrid}>
-          <StatCard label="Active listings" value={0} />
+          <StatCard label="Active listings" value={listingCount} />
           <StatCard label="Enquiries received" value={0} />
           <StatCard label="Profile views" value={0} />
         </div>
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
             <h3 style={styles.sectionTitle}>Your listings</h3>
-            <button style={styles.primaryBtn}>+ Post a room</button>
+            <button style={styles.primaryBtn} onClick={() => navigate("/post-listing")}>
+              + Post a room
+            </button>
           </div>
           <div style={styles.emptyState}>
             <p style={styles.emptyText}>No listings yet.</p>

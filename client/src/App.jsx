@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ListerDashboard from "./pages/ListerDashboard";
 import SeekerDashboard from "./pages/SeekerDashboard";
+import PostListing from "./pages/PostListing";
 
 function Dashboard() {
   const { user } = useAuth();
@@ -46,6 +47,14 @@ export default function App() {
           />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/post-listing"
+            element={
+              <RoleRoute role="lister">
+                <PostListing />
+              </RoleRoute>
+            }
+          />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
