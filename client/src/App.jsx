@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import ListerDashboard from "./pages/ListerDashboard";
 import SeekerDashboard from "./pages/SeekerDashboard";
 import PostListing from "./pages/PostListing";
+import Listings from "./pages/Listings";
+import ListingDetail from "./pages/ListingDetail";
 
 function Dashboard() {
   const { user } = useAuth();
@@ -21,40 +23,29 @@ export default function App() {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login"    element={<Login />} />
+
+          <Route path="/listings"     element={<Listings />} />
+          <Route path="/listings/:id" element={<ListingDetail />} />
+
           <Route
             path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
+            element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+          />
+          <Route
+            path="/post-listing"
+            element={<RoleRoute role="lister"><PostListing /></RoleRoute>}
           />
           <Route
             path="/lister"
-            element={
-              <RoleRoute role="lister">
-                <ListerDashboard />
-              </RoleRoute>
-            }
+            element={<RoleRoute role="lister"><ListerDashboard /></RoleRoute>}
           />
           <Route
             path="/seeker"
-            element={
-              <RoleRoute role="seeker">
-                <SeekerDashboard />
-              </RoleRoute>
-            }
+            element={<RoleRoute role="seeker"><SeekerDashboard /></RoleRoute>}
           />
+
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          <Route
-            path="/post-listing"
-            element={
-              <RoleRoute role="lister">
-                <PostListing />
-              </RoleRoute>
-            }
-          />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

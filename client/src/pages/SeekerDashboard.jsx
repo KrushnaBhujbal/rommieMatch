@@ -1,9 +1,10 @@
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 export default function SeekerDashboard() {
   const { user } = useAuth();
-
+  const navigate = useNavigate();
   return (
     <div style={styles.page}>
       <Navbar />
@@ -22,7 +23,7 @@ export default function SeekerDashboard() {
         <div style={styles.section}>
           <div style={styles.sectionHeader}>
             <h3 style={styles.sectionTitle}>Browse rooms</h3>
-            <button style={styles.primaryBtn}>Search listings</button>
+            <button style={styles.primaryBtn} onClick={() => navigate("/listings")}>Browse rooms</button>
           </div>
           <div style={styles.emptyState}>
             <p style={styles.emptyText}>No listings to browse yet.</p>
