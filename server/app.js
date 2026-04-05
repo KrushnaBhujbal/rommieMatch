@@ -16,6 +16,8 @@ app.use("/api/auth",  require("./src/routes/auth"));
 app.use("/api/users", require("./src/routes/users"));
 app.use("/api/listings", require("./src/routes/listings"));
 app.use("/api/upload",   require("./src/routes/upload"));
+app.use("/api/saved-listings", require("./src/routes/savedListings"));
+
 
 // 404
 app.use((req, res) => {

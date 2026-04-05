@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import SaveButton from "./SaveButton";
 
-export default function ListingCard({ listing }) {
+export default function ListingCard({ listing, isSaved = false}) {
   const navigate = useNavigate();
 
   const {
@@ -58,18 +59,19 @@ export default function ListingCard({ listing }) {
 
         {/* Footer */}
         <div style={styles.footer}>
-          <div style={styles.listerInfo}>
+        <div style={styles.listerInfo}>
             <div style={styles.avatar}>
-              {lister_name?.[0]?.toUpperCase()}
+            {lister_name?.[0]?.toUpperCase()}
             </div>
             <span style={styles.listerName}>
-              {lister_name}
-              {lister_verified && (
-                <span style={styles.verifiedBadge}>✓</span>
-              )}
+            {lister_name}
+            {lister_verified && <span style={styles.verifiedBadge}>✓</span>}
             </span>
-          </div>
-          <span style={styles.availDate}>From {availDate}</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={styles.availDate}>From {availDate}</span>
+            <SaveButton listingId={id} initialSaved={isSaved} />
+        </div>
         </div>
       </div>
     </div>
