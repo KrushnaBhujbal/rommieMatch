@@ -22,6 +22,12 @@ export default function Navbar() {
         }}>
           {user?.role}
         </span>
+        <button
+        onClick={() => navigate("/messages")}
+        style={styles.msgBtn}
+        >
+        Messages
+        </button>
  
         {/* User name */}
         <span style={styles.name}>{user?.name}</span>
@@ -48,6 +54,12 @@ const styles = {
     top: 0,
     zIndex: 10,
   },
+  msgBtn: {
+  fontSize: "13px", padding: "6px 14px",
+  borderRadius: "8px", border: "1px solid var(--border)",
+  background: "transparent", cursor: "pointer",
+  color: "var(--text-secondary)",
+},
   logo: {
     fontFamily: "var(--font-display)",
     fontSize: "1.2rem",

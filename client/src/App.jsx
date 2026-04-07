@@ -9,6 +9,8 @@ import SeekerDashboard from "./pages/SeekerDashboard";
 import PostListing from "./pages/PostListing";
 import Listings from "./pages/Listings";
 import ListingDetail from "./pages/ListingDetail";
+import Messages     from "./pages/Messages";
+import Conversation from "./pages/Conversation";
 
 function Dashboard() {
   const { user } = useAuth();
@@ -46,6 +48,9 @@ export default function App() {
 
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
+          <Route path="/messages"                      element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+          <Route path="/messages/:listingId/:otherUserId" element={<ProtectedRoute><Conversation /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

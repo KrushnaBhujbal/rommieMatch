@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Spinner from "../components/Spinner";
+import { useAuth } from "../context/AuthContext";
 
 export default function ListingDetail() {
   const { id }       = useParams();
@@ -141,8 +142,17 @@ export default function ListingDetail() {
               </div>
             </div>
 
-            <button style={styles.contactBtn}>
-              Message lister
+           <button
+            style={styles.contactBtn}
+            onClick={() => {
+                if (!user) {
+                navigate("/login");
+                return;
+                }
+                navigate(`/messages/${listing.id}/${listing.lister_id}`);
+            }}
+            >
+            {user?.role === "lister" ? "View messages" : "Message lister"}
             </button>
             <p style={styles.contactHint}>Messaging coming in Week 3</p>
           </div>
