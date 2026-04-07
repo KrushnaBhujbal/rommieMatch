@@ -33,7 +33,6 @@ export function AuthProvider({ children }) {
     }
   }, [token]);
 
-  // Add this after the useEffect block
   useEffect(() => {
     // Intercept every axios response
     const interceptor = axios.interceptors.response.use(
