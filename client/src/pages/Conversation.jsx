@@ -199,14 +199,20 @@ export default function Conversation() {
       {/* Message input */}
       <form onSubmit={handleSend} style={styles.inputBar}>
         <input
-          ref={inputRef}
-          value={newMessage}
-          onChange={e => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          style={styles.input}
-          disabled={sending}
-          autoFocus
-        />
+            ref={inputRef}
+            value={newMessage}
+            onChange={e => setNewMessage(e.target.value)}
+            onKeyDown={e => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend(e);
+                }
+            }}
+            placeholder="Type a message..."
+            style={styles.input}
+            disabled={sending}
+            autoFocus
+            />
         <button
           type="submit"
           style={{

@@ -12,6 +12,7 @@ export default function ListingDetail() {
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState("");
   const [activeImg, setActiveImg] = useState(0);
+  const { user } = useAuth();
 
   useEffect(() => {
     axios.get(`/api/listings/${id}`)
@@ -142,19 +143,18 @@ export default function ListingDetail() {
               </div>
             </div>
 
-           <button
+          <button
             style={styles.contactBtn}
             onClick={() => {
-                if (!user) {
-                navigate("/login");
-                return;
-                }
+                if (!user) { navigate("/login"); return; }
                 navigate(`/messages/${listing.id}/${listing.lister_id}`);
             }}
             >
             {user?.role === "lister" ? "View messages" : "Message lister"}
             </button>
-            <p style={styles.contactHint}>Messaging coming in Week 3</p>
+            <p style={styles.contactHint}>
+            {user ? "" : "Sign in to message the lister"}
+            </p>
           </div>
         </div>
 
