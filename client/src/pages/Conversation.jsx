@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import Spinner from "../components/Spinner";
 
-const SOCKET_URL = "http://localhost:5000";
+const SOCKET_URL = import.meta.env.VITE_API_URL || window.location.origin;
 
 export default function Conversation() {
   const { listingId, otherUserId } = useParams();

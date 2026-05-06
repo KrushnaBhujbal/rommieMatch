@@ -1,0 +1,31 @@
+services:
+
+  # ── Express + Socket.io backend ─────────────────
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: roomiematch-server
+    env_file:
+      - .env.docker
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  # ── React + Nginx frontend ───────────────────────
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VITE_GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+    container_name: roomiematch-client
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+    restart: unless-stopped
+
+networks:
+  default:
+    name: roomiematch-network

@@ -5,7 +5,7 @@ import axios from "axios";
 const AuthContext = createContext(null);
  
 // 2. Set axios base URL — all requests go to Express automatically
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || "";
  
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
