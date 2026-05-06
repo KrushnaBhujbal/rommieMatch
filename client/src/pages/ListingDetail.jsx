@@ -4,6 +4,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Spinner from "../components/Spinner";
 import { useAuth } from "../context/AuthContext";
+import ListingMap from "../components/ListingMap";
 
 export default function ListingDetail() {
   const { id }       = useParams();
@@ -118,6 +119,18 @@ export default function ListingDetail() {
               <SpecItem label="Furnished" value={furnished ? "Yes" : "No"} />
               <SpecItem label="Pets"      value={pets_allowed ? "Allowed" : "Not allowed"} />
             </div>
+            
+            {/* Map */}
+              <div style={styles.mapSection}>
+                <h3 style={styles.descTitle}>Location</h3>
+                <ListingMap
+                  latitude={listing.latitude}
+                  longitude={listing.longitude}
+                  address={listing.address}
+                  city={listing.city}
+                />
+              </div>
+
 
             {/* Description */}
             {description && (
@@ -180,6 +193,7 @@ const styles = {
   backBtn: { padding: "8px 18px", borderRadius: "8px", border: "1px solid var(--border)", background: "transparent", fontSize: "13px", cursor: "pointer", color: "var(--text-secondary)" },
   backLink: { background: "none", border: "none", color: "var(--text-secondary)", fontSize: "13px", cursor: "pointer", marginBottom: "1.25rem", padding: 0 },
   gallery: { marginBottom: "2rem" },
+  mapSection: { display: "flex", flexDirection: "column", gap: "8px" },
   mainImgWrap: { borderRadius: "var(--radius)", overflow: "hidden", aspectRatio: "16/9", marginBottom: "8px" },
   mainImg: { width: "100%", height: "100%", objectFit: "cover" },
   thumbRow: { display: "flex", gap: "8px" },

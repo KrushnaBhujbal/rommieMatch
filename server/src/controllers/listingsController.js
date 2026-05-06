@@ -1,4 +1,27 @@
 const pool = require("../db/pool");
+const { Client } = require("@googlemaps/google-maps-services-js");
+const mapsClient = new Client({});
+
+async function geocodeAddress(address, city) {
+  if (!process.env.GOOGLE_MAPS_API_KEY) return { lat: null, lng: null };
+  
+  try {
+    const response = await mapsClient.geocode({
+      params: {
+        address: `${address}, ${city}`,
+        key: process.env.GOOGLE_MAPS_API_KEY,
+      },
+    });
+
+    if (response.data.results.length > 0) {
+      const { lat, lng } = response.data.results[0].geometry.location;
+      return { lat, lng };
+    }
+    return { lat: null, lng: null };
+  } catch {
+    return { lat: null, lng: null };
+  }
+}
 
 // ─────────────────────────────────────────
 // CREATE LISTING
@@ -103,16 +126,47 @@ async function getListings(req, res) {
 
   query += ` ORDER BY l.created_at DESC`;
 
-  try {
-    const result = await pool.query(query, values);
-    return res.status(200).json({
-      listings: result.rows,
-      count: result.rowCount,
-    });
-  } catch (err) {
-    console.error("getListings error:", err);
-    return res.status(500).json({ error: "Server error" });
+try {
+  // Geocode the address if provided
+  let latitude  = null;
+  let longitude = null;
+
+  if (address || city) {
+    const coords = await geocodeAddress(address || city, city);
+    latitude  = coords.lat;
+    longitude = coords.lng;
   }
+
+  const result = await pool.query(
+    `INSERT INTO listings
+       (lister_id, title, description, rent, city, address,
+        available_from, bedrooms, bathrooms, furnished, pets_allowed,
+        images, latitude, longitude)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+     RETURNING *`,
+    [
+      req.user.userId,
+      title,
+      description || null,
+      Number(rent),
+      city,
+      address || null,
+      available_from,
+      bedrooms || 1,
+      bathrooms || 1,
+      furnished || false,
+      pets_allowed || false,
+      images || [],
+      latitude,
+      longitude,
+    ]
+  );
+
+  return res.status(201).json({ listing: result.rows[0] });
+} catch (err) {
+  console.error("createListing error:", err);
+  return res.status(500).json({ error: "Server error" });
+}
 }
 
 // ─────────────────────────────────────────
